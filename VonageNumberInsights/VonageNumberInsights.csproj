@@ -11,10 +11,4 @@
     <PackageReference Include="Vonage" Version="7.9.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="wwwroot\index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>
