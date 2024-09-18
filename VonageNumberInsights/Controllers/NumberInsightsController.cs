@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Newtonsoft.Json;
 using Vonage;
+using Vonage.NumberInsights;
 
 namespace VonageNumberInsights.Controllers
 {
@@ -9,22 +10,12 @@ namespace VonageNumberInsights.Controllers
     [Route("[controller]")]
     public class NumberInsightsController : ControllerBase
     {
-        private readonly ILogger<NumberInsightsController> _logger;
-        private VonageClient _vonageClient;
+        private INumberInsightClient _numberInsightClient;
 
         //We inject and get a reference to the VonageClient in the constructor
-        public NumberInsightsController(ILogger<NumberInsightsController> logger, VonageClient vonageClient)
+        public NumberInsightsController(INumberInsightClient numberInsightClient)
         {
-            _logger = logger;
-            _vonageClient = vonageClient;
-        }
-
-        //This is a simple endpoint that returns the index.html file from the wwwroot folder for our UI
-        [HttpGet("Index")]
-        public IActionResult Index()
-        {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "index.html");
-            return PhysicalFile(filePath, "text/html");
+            _numberInsightClient = numberInsightClient;
         }
 
         //For simplicity we have split the 3 types of Number Insight lookups into separate endpoints,
@@ -41,7 +32,7 @@ namespace VonageNumberInsights.Controllers
 
             try
             {
-                var result = await _vonageClient.NumberInsightClient.GetNumberInsightBasicAsync(new Vonage.NumberInsights.BasicNumberInsightRequest()
+                var result = await _numberInsightClient.GetNumberInsightBasicAsync(new Vonage.NumberInsights.BasicNumberInsightRequest()
                 {
                     Number = phoneNumber
                 });
@@ -67,7 +58,7 @@ namespace VonageNumberInsights.Controllers
 
             try
             {
-                var result = await _vonageClient.NumberInsightClient.GetNumberInsightStandardAsync(new Vonage.NumberInsights.StandardNumberInsightRequest()
+                var result = await _numberInsightClient.GetNumberInsightStandardAsync(new Vonage.NumberInsights.StandardNumberInsightRequest()
                 {
                     Number = phoneNumber
                 });
@@ -93,7 +84,7 @@ namespace VonageNumberInsights.Controllers
 
             try
             {
-                var result = await _vonageClient.NumberInsightClient.GetNumberInsightAdvancedAsync(new Vonage.NumberInsights.AdvancedNumberInsightRequest()
+                var result = await _numberInsightClient.GetNumberInsightAdvancedAsync(new Vonage.NumberInsights.AdvancedNumberInsightRequest()
                 {
                     Number = phoneNumber
                 });
